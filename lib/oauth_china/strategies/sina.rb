@@ -37,7 +37,13 @@ module OauthChina
     end
 
     def api(url, http_method, options = {})
-      self.send(http_method, url, options).body
+      #self.send(http_method, url, options).body
+      case http_method
+      when "get"
+        self.get(url, options).body
+      when "post"
+        self.post(url, options).body
+      end
     end
   end
 end
