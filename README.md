@@ -1,3 +1,47 @@
+#2012.3.21日更新
+新浪api调用
+
+``````
+# encoding: utf-8
+require 'cgi'
+class DemoController < ApplicationController
+  before_filter :find_auth
+
+  def user_info
+    result = JSON.parse(@client.api("http://api.t.sina.com.cn/account/verify_credentials.json", "get"))
+    respond_to do |format|
+      format.json{ render :json => result}
+    end
+  end
+
+  def weibo
+    options = {"status" => "纯文本测试"}
+    result = JSON.parse(@client.api("http://api.t.sina.com.cn/statuses/update.json", "post", options))
+    respond_to do |format|
+      format.json{ render :json => result}
+    end
+  end
+
+  def upload_img
+    status = CGI::escape "图文测试"
+    result = JSON.parse(@client.upload_image(status, "#{Rails.root}/public/system/post/images/1.jpg"))
+    respond_to do |format|
+      format.json{ render :json => result}
+    end
+  end
+
+  private
+  def find_auth
+    @client = OauthChina::Sina.load(:access_token => current_user.sinauth.access_token, 
+                                      :access_token_secret => current_user.sinauth.access_token_secret)
+  end
+end
+
+``````
+除了上传图片比较特殊外，其他接口均可以参考新浪官网api来调用，格式为：
+result = JSON.parse(@client.api("http://api.t.sina.com.cn/statuses/update.json", "post", options))
+
+
 #简介
 
 * 通过OAuth方式同步用户消息到微博平台（支持豆瓣，新浪微薄，腾讯微博，搜狐微博，网易微博）

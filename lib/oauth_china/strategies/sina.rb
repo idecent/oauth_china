@@ -1,3 +1,4 @@
+
 module OauthChina
   class Sina < OauthChina::OAuth
       
@@ -32,10 +33,11 @@ module OauthChina
 
     def upload_image(content, image_path, options = {})
       options = options.merge!(:status => content, :pic => File.open(image_path, "rb")).to_options
-      upload("http://api.t.sina.com.cn/statuses/upload.json", options)
+      upload("http://api.t.sina.com.cn/statuses/upload.json", options).body
     end
 
-    
-
+    def api(url, http_method, options = {})
+      self.send(http_method, url, options).body
+    end
   end
 end

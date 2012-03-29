@@ -32,6 +32,10 @@ module OauthChina
       #TODO
     end
 
+    def api(url, http_method, options = {})
+      self.send(http_method, url, options).body
+    end
+
     def add_status(content, options = {})
       options.merge!(:content => content)
       self.post("http://open.t.qq.com/api/t/add", options)
