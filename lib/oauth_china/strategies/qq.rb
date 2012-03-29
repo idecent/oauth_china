@@ -32,10 +32,6 @@ module OauthChina
       #TODO
     end
 
-    def api(url, http_method, options = {})
-      self.send(http_method, url, options).body
-    end
-
     def add_status(content, options = {})
       options.merge!(:content => content)
       self.post("http://open.t.qq.com/api/t/add", options)
@@ -44,6 +40,15 @@ module OauthChina
     #TODO
     def upload_image(content, image_path, options = {})
       add_status(content, options)
+    end
+
+    def api(url, http_method, options = {})
+      if http_method == 'get'
+        params = options.to_a.sort.map { |c| "#{c[0]}=#{c[1]}" if c[1] != '' }.join('&')
+        self.get(url + '?' + params).body
+      else
+        self.send(http_method, url, options).body
+      end
     end
 
     #    def upload_image(content, image_path, options = {})
